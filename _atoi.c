@@ -1,70 +1,73 @@
-#include "simple_shell.h"
+#include "shell.h"
 
 /**
- * interactive - A function checking the interactive mode
- * @info: the address
- * Return: 1 on success an 0 when itbfails
+ * interactive - returns true if shell is interactive mode
+ * @info: struct address
+ *
+ * Return: 1 if interactive mode, 0 otherwise
  */
 int interactive(info_t *info)
 {
-	return (isatty(STDIN_FILENO) && info->readfd ==0);
+	return (isatty(STDIN_FILENO) && info->readfd <= 2);
 }
+
 /**
- * is_delim - A function checking for the delimetry of char
- * @str: the string to be checked
- * @delim: the delimetry 
- * Return: 1 on success and 0 when it fails
+ * is_delim - checks if character is a delimeter
+ * @c: the char to check
+ * @delim: the delimeter string
+ * Return: 1 if true, 0 if false
  */
-int is_delim(char str, char *delim)
+int is_delim(char c, char *delim)
 {
 	while (*delim)
-		if (*delim++ == str)
+		if (*delim++ == c)
 			return (1);
 	return (0);
 }
+
 /**
- * _isalpha - A function checking for an alphabet letter
- * @c: the input char
- * Return: 1 on success and 0 when fails
+ * _isalpha - checks for alphabetic character
+ * @c: The character to input
+ * Return: 1 if c is alphabetic, 0 otherwise
  */
+
 int _isalpha(int c)
 {
-	if (c >= 'a' && c <= 'z')
-	       return (1);
-	if (c >= 'A' && c <= 'Z')
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 		return (1);
 	else
 		return (0);
 }
 /**
- * _atoi - A function converting alpha ti integer
- * @s: string to be converted
- * Return: 1 on a integer in the string
+ * _atoi - converts a string to an integer
+ * @s: the string to be converted
+ * Return: 0 if no numbers in string, converted number otherwise
  */
-int _atoi(char * *s)
-{
-int i;
-int sign =  1;
-int flag =  0;
-int out;
-unsigned int res = 0;
-for (i = 0; s[i] != '\0'; && flag != 2; i++)
-{
-if (s[i] == '-')
-sign = -1;
-if (s[i] >= '0' && s[i] <= '0')
-{
-flag = 1;
-res =10;
-res  = (s[i] - '0');
-}
-else if (flag == 1)
-flag =2;
-}
-if (sign == -1)
-out = (res * -1);
-else
-out = res;
-return (out);
-}
 
+int _atoi(char *s)
+{
+	int i, sign = 1, flag = 0, output;
+	unsigned int result = 0;
+
+	for (i = 0; s[i] != '\0' && flag != 2; i++)
+	{
+		if (s[i] == '-')
+			sign *= -1;
+
+		if (s[i] >= '0' && s[i] <= '9')
+		{
+			flag = 1;
+			result *= 10;
+			result += (s[i] - '0');
+		}
+		else if (flag == 1)
+			flag = 2;
+	}
+
+	if (sign == -1)
+		output = -result;
+	else
+		output = result;
+
+	return (output);
+}
